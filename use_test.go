@@ -12,14 +12,14 @@ import (
 
 func TestUse(t *testing.T) {
 	err := withTx(t, func(tx *sql.Tx) error {
-		tuple := gofix.Use(t, tx)
+		insert := gofix.Use(t, tx)
 
-		facebook := tuple("companies", "id",
+		facebook := insert("companies", "id",
 			"name", "Facebook Inc",
 			"address", "1 Hacker Way, Menlo Park, CA 94025, USA",
 			"created_at", time.Now())
 
-		fbhelpdesk := tuple("departments", "id",
+		fbhelpdesk := insert("departments", "id",
 			"name", "Helpdesk",
 			"company_id", facebook,
 			"created_at", time.Now())
