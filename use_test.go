@@ -24,6 +24,16 @@ func TestUse(t *testing.T) {
 			"company_id", facebook,
 			"created_at", time.Now())
 
+		employee := insert("employees", "id",
+			"department_id", fbhelpdesk,
+			"name", "Chris",
+			"email", "chris@example.com",
+			"created_at", time.Now())
+
+		insert("departments_employees", "",
+			"department_id", fbhelpdesk,
+			"employee_id", employee)
+
 		t.Run("verify companies", func(t *testing.T) {
 			rows, err := tx.Query("SELECT id, name, address FROM companies")
 			if err != nil {
@@ -73,6 +83,26 @@ func TestUse(t *testing.T) {
 			}
 			if want, got := false, rows.Next(); want != got {
 				t.Errorf("expect only 1 record, but has more")
+			}
+		})
+
+		t.Run("verify departments_employees", func(t *testing.T) {
+			rows, err := tx.Query("SELECT department_id, employee_id FROM departments_employees")
+			if err != nil {
+				t.Error(err)
+				return
+			}
+			if want, got := true, rows.Next(); want != got {
+				t.Errorf("expect at least 1 record, but has none")
+			}
+
+			var department_id, employee_id string
+			rows.Scan(&department_id, &employee_id)
+			if want, got := fbhelpdesk, department_id; want != got {
+				t.Errorf("wanted department_id=%#v but was %#v", want, got)
+			}
+			if want, got := employee, employee_id; want != got {
+				t.Errorf("wanted employee_id=%#v but was %#v", want, got)
 			}
 		})
 

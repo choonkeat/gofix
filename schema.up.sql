@@ -18,6 +18,10 @@ CREATE TABLE employees (
   email text NOT NULL,
   created_at timestamp with time zone NOT NULL);
 
+CREATE TABLE departments_employees (
+  department_id bigint NOT NULL,
+  employee_id bigint NOT NULL);
+
 ALTER TABLE departments
   ADD CONSTRAINT departments_company_id FOREIGN KEY(company_id) REFERENCES companies(id);
 

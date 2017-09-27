@@ -23,18 +23,23 @@ func Use(t *testing.T, tx *sql.Tx) fn {
 			}
 		}
 
-		query := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s) RETURNING %s",
+		query := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)",
 			tablename,
 			strings.Join(cols, ","),
 			strings.Join(placeholders, ","),
-			primaryKey,
 		)
-
-		var pkvalue string
-		if err := tx.QueryRow(query, vals...).Scan(&pkvalue); err != nil {
-			t.Fatalf("failed %#v %#v: %s", query, vals, err.Error())
+		if primaryKey != "" {
+			query = query + " RETURNING " + primaryKey
+			var pkvalue string
+			if err := tx.QueryRow(query, vals...).Scan(&pkvalue); err != nil {
+				t.Fatalf("failed %#v %#v: %s", query, vals, err.Error())
+			}
+			return pkvalue
 		}
 
-		return pkvalue
+		if _, err := tx.Exec(query, vals...); err != nil {
+			t.Fatalf("failed %#v %#v: %s", query, vals, err.Error())
+		}
+		return ""
 	}
 }
