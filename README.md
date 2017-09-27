@@ -8,10 +8,17 @@ facebook := insert("companies", "id",
   "address", "1 Hacker Way, Menlo Park, CA 94025, USA",
   "created_at", time.Now())
 
-insert("departments", "id",
+fbhelpdesk := insert("departments", "id",
   "name", "Helpdesk",
   "company_id", facebook,
   "created_at", time.Now())
+
+insert("departments_employees",
+  "department_id", fbhelpdesk,
+  "employee_id", employee)
 ```
 
-NOTE: `facebook` in the above example is the value of the primary key, `companies.id`
+NOTES
+
+- `facebook` in the above example is the value of the primary key, `companies.id`
+- `departments_employees` table has no primary key, so `insert` did not provide a primary key column unlike the other inserts (e.g. `"id"`)
