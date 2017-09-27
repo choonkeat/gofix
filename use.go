@@ -7,13 +7,20 @@ import (
 	"testing"
 )
 
-type fn func(string, string, ...interface{}) interface{}
+type fn func(string, ...interface{}) interface{}
 
 // Use is a row in DB
 func Use(t *testing.T, tx *sql.Tx) fn {
-	return func(tablename, primaryKey string, args ...interface{}) interface{} {
+	return func(tablename string, args ...interface{}) interface{} {
+		var primaryKey string
 		var cols, placeholders []string
 		var vals []interface{}
+
+		if len(args)%2 != 0 {
+			primaryKey = args[0].(string)
+			args = args[1:]
+		}
+
 		for i, x := range args {
 			if i%2 == 0 {
 				cols = append(cols, string(x.(string)))

@@ -30,7 +30,7 @@ func TestUse(t *testing.T) {
 			"email", "chris@example.com",
 			"created_at", time.Now())
 
-		insert("departments_employees", "",
+		insert("departments_employees",
 			"department_id", fbhelpdesk,
 			"employee_id", employee)
 
