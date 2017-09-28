@@ -37,7 +37,7 @@ func Use(t *testing.T, tx *sql.Tx) fn {
 		)
 		if primaryKey != "" {
 			query = query + " RETURNING " + primaryKey
-			var pkvalue string
+			var pkvalue interface{}
 			if err := tx.QueryRow(query, vals...).Scan(&pkvalue); err != nil {
 				t.Fatalf("failed %#v %#v: %s", query, vals, err.Error())
 			}
@@ -47,6 +47,6 @@ func Use(t *testing.T, tx *sql.Tx) fn {
 		if _, err := tx.Exec(query, vals...); err != nil {
 			t.Fatalf("failed %#v %#v: %s", query, vals, err.Error())
 		}
-		return ""
+		return nil
 	}
 }

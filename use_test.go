@@ -44,7 +44,8 @@ func TestUse(t *testing.T) {
 				t.Errorf("expect at least 1 record, but has none")
 			}
 
-			var id, name, address string
+			var id int64
+			var name, address string
 			rows.Scan(&id, &name, &address)
 			if want, got := facebook, id; want != got {
 				t.Errorf("wanted id=%#v but was %#v", want, got)
@@ -70,7 +71,8 @@ func TestUse(t *testing.T) {
 				t.Errorf("expect at least 1 record, but has none")
 			}
 
-			var id, name, companyID string
+			var id, companyID int64
+			var name string
 			rows.Scan(&id, &name, &companyID)
 			if want, got := fbhelpdesk, id; want != got {
 				t.Errorf("wanted id=%#v but was %#v", want, got)
@@ -96,7 +98,7 @@ func TestUse(t *testing.T) {
 				t.Errorf("expect at least 1 record, but has none")
 			}
 
-			var department_id, employee_id string
+			var department_id, employee_id int64
 			rows.Scan(&department_id, &employee_id)
 			if want, got := fbhelpdesk, department_id; want != got {
 				t.Errorf("wanted department_id=%#v but was %#v", want, got)
