@@ -10,7 +10,12 @@ import (
 type fn func(string, ...interface{}) interface{}
 
 // Use is a row in DB
-func Use(t *testing.T, tx *sql.Tx) fn {
+// t is the instance of testing.T
+// tx is the transaction of your database connection
+//
+// defaultArgs is a key-value pair that will be appended
+// to every `fn` call, treated as part of `args`
+func Use(t *testing.T, tx *sql.Tx, defaultArgs ...interface{}) fn {
 	return func(tablename string, args ...interface{}) interface{} {
 		var primaryKey string
 		var cols, placeholders []string
@@ -21,7 +26,7 @@ func Use(t *testing.T, tx *sql.Tx) fn {
 			args = args[1:]
 		}
 
-		for i, x := range args {
+		for i, x := range append(args, defaultArgs...) {
 			if i%2 == 0 {
 				cols = append(cols, string(x.(string)))
 			} else {
