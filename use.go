@@ -44,13 +44,13 @@ func Use(t *testing.T, tx *sql.Tx, defaultArgs ...interface{}) fn {
 			query = query + " RETURNING " + primaryKey
 			var pkvalue interface{}
 			if err := tx.QueryRow(query, vals...).Scan(&pkvalue); err != nil {
-				t.Fatalf("failed %#v %#v: %s", query, vals, err.Error())
+				t.Errorf("failed %#v %#v: %s", query, vals, err.Error())
 			}
 			return pkvalue
 		}
 
 		if _, err := tx.Exec(query, vals...); err != nil {
-			t.Fatalf("failed %#v %#v: %s", query, vals, err.Error())
+			t.Errorf("failed %#v %#v: %s", query, vals, err.Error())
 		}
 		return nil
 	}
