@@ -1,0 +1,21 @@
+version: "3"
+services:
+  mydb:
+    image: "postgres"
+    volumes:
+      - ./schema.up.sql:/docker-entrypoint-initdb.d/schema.up.sql
+    environment:
+      - POSTGRES_DB=myapp_test
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=topsecret
+
+  test:
+    image: "golang:1.14.2"
+    command: "go test"
+    volumes:
+      - .:/go/src/github.com/choonkeat/gofix
+    working_dir: /go/src/github.com/choonkeat/gofix
+    depends_on:
+      - mydb
+    environment:
+      DATABASE_URL: postgres://myuser:topsecret@mydb:5432/myapp_test?sslmode=disable
